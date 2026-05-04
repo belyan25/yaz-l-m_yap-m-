@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0AE91E63"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="32dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-black"
+                android:text="Catchy"
+                android:textColor="#212121"
+                android:textSize="38sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="Words"
+                android:textColor="#1507D7"
+                android:textSize="38sp"
+                android:textStyle="italic" />
+
+
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/editTextUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:hint="Kullanıcı Adı"
+            android:inputType="textPersonName"
+            android:minHeight="55dp"
+            android:textColorHint="#757575"/>
+
+
+        <!-- E-posta Alanı -->
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="E-posta Adresi"
+            android:inputType="textEmailAddress"
+            android:minHeight="55dp"
+            android:layout_marginBottom="18dp"
+            android:textColorHint="#757575"/>
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:hint="Şifre"
+            android:inputType="textPassword"
+            android:minHeight="55dp"
+            android:textColorHint="#757575"/>
+
+        <!-- Şifre Tekrar Alanı -->
+        <EditText
+            android:id="@+id/editTextConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Şifreyi Tekrar Girin"
+            android:inputType="textPassword"
+            android:minHeight="55dp"
+            android:layout_marginBottom="24dp"
+            android:textColorHint="#757575"/>
+
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Kayıt Ol"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#1507D7"
+            android:textAllCaps="false" />
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
