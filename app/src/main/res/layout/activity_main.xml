@@ -8,15 +8,33 @@
     android:gravity="center"
     android:background="#0AE91E63">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Kelime Ezberle"
-        android:textSize="35sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="32dp"
-        android:textColor="#000000"
-        android:fontFamily="sans-serif-medium"/>
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="32dp">
+
+        <TextView
+            android:text="Catchy"
+            android:textSize="38sp"
+            android:fontFamily="sans-serif-black"
+            android:textColor="#212121"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="Words"
+            android:textSize="38sp"
+            android:textStyle="italic"
+            android:fontFamily="sans-serif-light"
+            android:textColor="#1507D7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+</LinearLayout>
 
 
     <EditText
@@ -37,6 +55,19 @@
         android:hint="Şifre"
         android:inputType="textPassword"
         android:layout_marginBottom="24dp"/>
+    <TextView
+        android:id="@+id/textViewForgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Şifremi Unuttum"
+        android:textSize="15sp"
+        android:textColor="#757575"
+        android:layout_gravity="end"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless" />
 
     <Button
         android:backgroundTint="#AF000000"
@@ -55,7 +86,7 @@
         android:text="Hesabın yok mu? Kayıt Ol"
         android:textSize="16sp"
         android:layout_marginTop="10dp"
-        android:backgroundTint="#4EBF53"
+        android:backgroundTint="#1507D7"
         android:textAllCaps="false" />
 
 </LinearLayout>
