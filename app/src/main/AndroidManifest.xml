@@ -24,7 +24,10 @@
         <activity
             android:name=".SignUpActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:parentActivityName=".MainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

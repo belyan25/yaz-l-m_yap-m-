@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="32dp"
     android:gravity="center"
-    android:background="#0AE91E63">
+    android:background="#1B4F08DC">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -70,13 +70,13 @@
         android:background="?attr/selectableItemBackgroundBorderless" />
 
     <Button
-        android:backgroundTint="#AF000000"
+        android:backgroundTint="#212121"
         android:minHeight="30sp"
         android:id="@+id/btnLogin"
         android:layout_width="100pt"
         android:layout_height="60dp"
         android:text="Giriş Yap"
-        android:textColor="#FBFBFB"
+        android:textColor="#FBFAFA"
         android:padding="15dp"
         android:textAllCaps="false" />
     <Button
