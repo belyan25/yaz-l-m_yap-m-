@@ -24,5 +24,13 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ForgotPasswordActivity::class.java)
             startActivity(intent)
         } // <--- forgotPasswordText burada bitti!
+        // MainActivity.kt içindeki giriş butonu kodun
+        val btnLogin = findViewById<android.widget.Button>(R.id.btnLogin) // ID'ni kontrol et (Görselde btnSignIn gibi duruyor)
+
+        btnLogin.setOnClickListener {
+            val intent = android.content.Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finish() // Giriş yaptıktan sonra geri dönünce login ekranını bir daha görmesin
+        }
     }
 }
