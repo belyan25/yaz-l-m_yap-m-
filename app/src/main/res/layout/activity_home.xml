@@ -22,15 +22,31 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <TextView
-            android:id="@+id/tvAppTitle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="CatchyW"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="@color/my_app_pink"
-            android:layout_marginBottom="24dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+
+            <ImageView
+                android:id="@+id/ivAppLogo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_logo_tavsan"
+                android:layout_marginEnd="8dp"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:id="@+id/tvAppTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CatchyW"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/my_app_pink" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnStartQuiz"
