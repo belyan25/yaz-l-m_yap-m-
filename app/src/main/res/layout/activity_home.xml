@@ -5,6 +5,17 @@
     android:layout_height="match_parent"
     android:background="#F8F9FA">
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabAddWord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:text="Kelime Ekle"
+        android:backgroundTint="#1507D7"
+        android:textColor="#FFFFFF" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +29,7 @@
             android:text="CatchyW"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="#1507D7"
+            android:textColor="@color/my_app_pink"
             android:layout_marginBottom="24dp"/>
 
         <Button
@@ -27,7 +38,7 @@
             android:layout_height="60dp"
             android:text="Sınava Başla"
             android:layout_marginBottom="12dp"
-            android:backgroundTint="#CBFB246D"
+            android:backgroundTint="#FB246D"
             app:cornerRadius="12dp"/>
 
         <Button
@@ -39,36 +50,22 @@
             android:backgroundTint="#8BC34A"
             app:cornerRadius="12dp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvWords"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/btnShowReport"
-            android:layout_marginTop="10dp"
-            android:padding="8dp"/>
-
         <Button
             android:id="@+id/btnStartWordle"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:text="Kelime Bulmacası (Wordle)"
             android:backgroundTint="#03A9F4"
-            app:cornerRadius="12dp"/>
+            app:cornerRadius="12dp"
+            android:layout_marginBottom="10dp"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvWords"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="8dp"/>
 
     </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fabAddWord"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="30dp"
-        android:text="Kelime Ekle"
-        android:textColor="#FFFFFF"
-        android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="#1507D7"
-        app:tint="#FFFFFF" />
 
 </RelativeLayout>
