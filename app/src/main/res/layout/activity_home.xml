@@ -27,7 +27,7 @@
             android:layout_height="60dp"
             android:text="Sınava Başla"
             android:layout_marginBottom="12dp"
-            android:backgroundTint="#8DFB246D"
+            android:backgroundTint="#CBFB246D"
             app:cornerRadius="12dp"/>
 
         <Button

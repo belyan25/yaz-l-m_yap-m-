@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-black"
                 android:text="Catchy"
-                android:textColor="#212121"
+                android:textColor="#E6FB246D"
                 android:textSize="38sp" />
 
             <TextView
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-black"
                 android:text="W"
-                android:textColor="#1507D7"
+                android:textColor="#8BC34A"
                 android:textSize="38sp"
                 android:textStyle="italic" />
 
@@ -85,7 +85,7 @@
 
         <Button
             android:id="@+id/btnRegister"
-            android:layout_width="match_parent"
+            android:layout_width="90pt"
             android:layout_height="60dp"
             android:text="Kayıt Ol"
             android:textSize="16sp"
