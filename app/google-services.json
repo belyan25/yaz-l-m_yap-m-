@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "231736596188",
+    "project_id": "yazilimyapimi1",
+    "storage_bucket": "yazilimyapimi1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231736596188:android:0fdb657b3abb9812f48619",
+        "android_client_info": {
+          "package_name": "com.example.kelimeezberlemesistemi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfEQPPin0pHNbFwSxAQEahSbD4qYIsgUw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

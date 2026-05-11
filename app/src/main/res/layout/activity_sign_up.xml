@@ -40,17 +40,6 @@
         </LinearLayout>
 
 
-        <EditText
-            android:id="@+id/editTextUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
-            android:hint="Kullanıcı Adı"
-            android:inputType="textPersonName"
-            android:minHeight="55dp"
-            android:textColorHint="#757575"/>
-
-
         <!-- E-posta Alanı -->
         <EditText
             android:id="@+id/editTextEmail"
