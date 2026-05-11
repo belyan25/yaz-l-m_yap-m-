@@ -9,9 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 class WordAdapter(private val wordList: List<Word>) : RecyclerView.Adapter<WordAdapter.WordViewHolder>() {
 
     class WordViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvEng: TextView = view.findViewById(R.id.tvEngWord)
-        val tvTr: TextView = view.findViewById(R.id.tvTrWord)
-        val tvProg: TextView = view.findViewById(R.id.tvProgress)
+        // BURASI DEĞİŞTİ: XML'deki yeni id'ler ile eşitledik
+        val tvEng: TextView = view.findViewById(R.id.tvEnglishWord)
+        val tvTr: TextView = view.findViewById(R.id.tvTurkishMeaning)
+
+        // Eğer ilerleme (progress) bilgisini yeni kartta kullanmayacaksan
+        // bu satırı silebilirsin ya da XML'e bir TextView daha ekleyebilirsin.
+        // Şimdilik hata vermemesi için aşağıya bağlıyoruz.
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordViewHolder {
@@ -23,7 +27,10 @@ class WordAdapter(private val wordList: List<Word>) : RecyclerView.Adapter<WordA
         val word = wordList[position]
         holder.tvEng.text = word.eng
         holder.tvTr.text = word.tr
-        holder.tvProg.text = word.progress
+
+        // Eğer kart tasarımında 'tvProgress' yoksa bu satır kırmızı yanabilir.
+        // Kart tasarımında şimdilik buna yer vermedik, istersen yorum satırına al:
+        // holder.tvProg.text = word.progress
     }
 
     override fun getItemCount() = wordList.size
