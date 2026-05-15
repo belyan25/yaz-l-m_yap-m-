@@ -16,11 +16,15 @@ class WordleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wordle)
 
+        // --- GERİ TUŞU BURAYA EKLENDİ ---
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "WordleW" // Üst barda yazacak isim
+        // -------------------------------
+
         val etGuess = findViewById<EditText>(R.id.etGuess)
         val btnCheck = findViewById<Button>(R.id.btnCheck)
         val tvResult = findViewById<TextView>(R.id.tvGameResult)
 
-        // Satırları gruplayarak tek seferde tanımlıyoruz
         val allRows = listOf(
             listOf(findViewById<TextView>(R.id.tv1), findViewById(R.id.tv2), findViewById(R.id.tv3), findViewById(R.id.tv4), findViewById(R.id.tv5)),
             listOf(findViewById<TextView>(R.id.tv6), findViewById(R.id.tv7), findViewById(R.id.tv8), findViewById(R.id.tv9), findViewById(R.id.tv10)),
@@ -46,11 +50,10 @@ class WordleActivity : AppCompatActivity() {
                     val cell = currentCells[i]
                     cell.text = charGuessed.toString()
 
-                    // Renk Mantığı
                     val color = when {
                         charGuessed == targetWord[i] -> R.drawable.box_style_green
                         targetWord.contains(charGuessed) -> R.drawable.box_style_pink
-                        else -> R.drawable.box_style // Yanlışsa varsayılan kalsın
+                        else -> R.drawable.box_style
                     }
                     cell.setBackgroundResource(color)
                     cell.setTextColor(ContextCompat.getColor(this, android.R.color.white))
@@ -66,5 +69,11 @@ class WordleActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    // --- GERİ TUŞUNA BASILINCA NE OLACAK? ---
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed() // Bir önceki sayfaya (HomeActivity) döner
+        return true
     }
 }
