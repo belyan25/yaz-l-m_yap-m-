@@ -6,32 +6,31 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class WordAdapter(private val wordList: List<Word>) : RecyclerView.Adapter<WordAdapter.WordViewHolder>() {
+class WordAdapter(private val wordList: List<Word>) :
+    RecyclerView.Adapter<WordAdapter.WordViewHolder>() {
 
     class WordViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        // BURASI DEĞİŞTİ: XML'deki yeni id'ler ile eşitledik
-        val tvEng: TextView = view.findViewById(R.id.tvEnglishWord)
-        val tvTr: TextView = view.findViewById(R.id.tvTurkishMeaning)
-
-        // Eğer ilerleme (progress) bilgisini yeni kartta kullanmayacaksan
-        // bu satırı silebilirsin ya da XML'e bir TextView daha ekleyebilirsin.
-        // Şimdilik hata vermemesi için aşağıya bağlıyoruz.
+        val tvEnglish: TextView = view.findViewById(R.id.tvEnglishWord) // Kendi layout id'nizle eşleşmeli
+        val tvTurkish: TextView = view.findViewById(R.id.tvTurkishWord) // Kendi layout id'nizle eşleşmeli
+        val tvStatus: TextView = view.findViewById(R.id.tvWordStatus)   // Kendi layout id'nizle eşleşmeli
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_word, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_word, parent, false) // item_word tasarımıyla eşleşir
         return WordViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
-        val word = wordList[position]
-        holder.tvEng.text = word.eng
-        holder.tvTr.text = word.tr
+        val currentWord = wordList[position]
 
-        // Eğer kart tasarımında 'tvProgress' yoksa bu satır kırmızı yanabilir.
-        // Kart tasarımında şimdilik buna yer vermedik, istersen yorum satırına al:
-        // holder.tvProg.text = word.progress
+        // --- BURAYI YENİ WORD MODELİNE GÖRE DÜZELTTİK ---
+        holder.tvEnglish.text = currentWord.engWordName
+        holder.tvTurkish.text = currentWord.turWordName
+        holder.tvStatus.text = currentWord.status
     }
 
-    override fun getItemCount() = wordList.size
+    override fun getItemCount(): Int {
+        return wordList.size
+    }
 }

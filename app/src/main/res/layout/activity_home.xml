@@ -7,7 +7,7 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddWord"
-        android:layout_width="wrap_content"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -36,18 +36,9 @@
                 android:text="CatchyW"
                 android:textSize="28sp"
                 android:textStyle="bold"
-                android:textColor="@color/my_app_pink" />
+                android:textColor="#353434" />
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btnStartQuiz"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="Sınava Başla"
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="#FB246D"
-            app:cornerRadius="12dp"/>
 
         <Button
             android:id="@+id/btnShowReport"
@@ -59,6 +50,15 @@
             app:cornerRadius="12dp"/>
 
         <Button
+            android:id="@+id/btnStartQuiz"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Sınava Başla"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="#FB246D"
+            app:cornerRadius="12dp"/>
+
+        <Button
             android:id="@+id/btnStartWordle"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -67,6 +67,17 @@
             app:cornerRadius="12dp"
             android:layout_marginBottom="10dp"/>
 
+        <Button
+            android:id="@+id/btnGoStory"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Hikaye Oluştur"
+            android:backgroundTint="#353434"
+            android:textColor="@android:color/white"
+            app:cornerRadius="12dp"/>
+
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvWords"
             android:layout_width="match_parent"
@@ -74,7 +85,7 @@
             android:layout_weight="1"
             android:layout_marginTop="16dp"
             android:clipToPadding="false"
-            android:paddingBottom="80dp"
+            android:paddingBottom="100dp"
             android:scrollbarStyle="outsideOverlay" />
 
     </LinearLayout>

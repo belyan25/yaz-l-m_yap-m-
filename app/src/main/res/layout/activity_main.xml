@@ -84,7 +84,7 @@
         android:background="?attr/selectableItemBackgroundBorderless" />
 
     <Button
-        android:backgroundTint="#212121"
+        android:backgroundTint="#353434"
         android:minHeight="30sp"
         android:id="@+id/btnLogin"
         android:layout_width="100pt"

@@ -1,12 +1,12 @@
 package com.example.kelimeezberlemesistemi
 
 import android.content.Intent
-import android.graphics.Color // RENK İÇİN EKLEDİK
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
-import android.text.style.ForegroundColorSpan // RENK İÇİN EKLEDİK
+import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.widget.Button
 import android.widget.TextView
@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-
 
 class HomeActivity : AppCompatActivity() {
 
@@ -87,18 +86,26 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // 6. Örnek Kelime Listesi (RecyclerView)
-        val exampleWords = listOf(
-            Word("Apple", "Elma", "4/6"),
-            Word("Success", "Başarı", "6/6"),
-            Word("Study", "Ders Çalışmak", "2/6"),
-            Word("Computer", "Bilgisayar", "0/6"),
-            Word("Galaxy", "Gökada", "5/6")
+        // --- 6. YAPAY ZEKA HİKAYE SAYFASINA GEÇİŞ ---
+        val btnGoStory = findViewById<Button>(R.id.btnGoStory)
+        btnGoStory.setOnClickListener {
+            val intent = Intent(this@HomeActivity, StoryActivity::class.java)
+            startActivity(intent)
+        }
+
+        // --- 7. ÖRNEK KELİME LİSTESİ (Açıkça Tip Belirtildi) ---
+        val exampleWords: List<com.example.kelimeezberlemesistemi.Word> = listOf(
+            com.example.kelimeezberlemesistemi.Word("Apple", "Elma", "4/6"),
+            com.example.kelimeezberlemesistemi.Word("Success", "Başarı", "6/6"),
+            com.example.kelimeezberlemesistemi.Word("Study", "Ders Çalışmak", "2/6"),
+            com.example.kelimeezberlemesistemi.Word("Computer", "Bilgisayar", "0/6"),
+            com.example.kelimeezberlemesistemi.Word("Galaxy", "Gökada", "5/6")
         )
 
         val rvWords = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rvWords)
         rvWords.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
-        val adapter = WordAdapter(exampleWords)
+        val adapter = com.example.kelimeezberlemesistemi.WordAdapter(exampleWords)
         rvWords.adapter = adapter
     }
+
 }

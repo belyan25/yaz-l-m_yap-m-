@@ -55,6 +55,11 @@
             android:exported="false"
             android:parentActivityName=".HomeActivity" />
 
+        <activity
+            android:name=".StoryActivity"
+            android:exported="false"
+            android:parentActivityName=".HomeActivity" />
+
     </application>
 
 </manifest>

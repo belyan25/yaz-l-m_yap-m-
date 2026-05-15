@@ -1,4 +1,7 @@
 package com.example.kelimeezberlemesistemi
 
-class word {
-}data class Word(val eng: String, val tr: String, val progress: String)
+data class Word(
+    val engWordName: String,
+    val turWordName: String,
+    val status: String // "4/6" gibi ezber durumunu tutması için
+)
