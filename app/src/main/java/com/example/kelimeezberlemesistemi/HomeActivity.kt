@@ -34,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
         val tvTitle = findViewById<TextView>(R.id.tvAppTitle)
         val text = "CatchyW"
         val spannableString = SpannableString(text)
-
         spannableString.setSpan(ForegroundColorSpan(Color.BLACK), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#1507D7")), 6, 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         spannableString.setSpan(StyleSpan(Typeface.ITALIC), 6, 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -43,9 +42,6 @@ class HomeActivity : AppCompatActivity() {
         // --- 2. KELİME EKLEME BUTONU ---
         val fabAdd = findViewById<ExtendedFloatingActionButton>(R.id.fabAddWord)
         fabAdd.setOnClickListener {
-            // (Sistem hatasız çalıştığı için istersen bu Toast mesajlarını silebilir veya yorum satırı yapabilirsin)
-            // Toast.makeText(this@HomeActivity, "1. Butona Tıklandı!", Toast.LENGTH_SHORT).show()
-
             try {
                 val bottomSheet = BottomSheetDialog(this@HomeActivity)
                 val view = layoutInflater.inflate(R.layout.dialog_add_word, null)
@@ -120,6 +116,7 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, WordleActivity::class.java))
         }
 
+        // Yapay zeka hikaye butonumuz tıkır tıkır çalışıyor
         val btnGoStory = findViewById<MaterialCardView>(R.id.btnGoStory)
         btnGoStory.setOnClickListener {
             startActivity(Intent(this, StoryActivity::class.java))
@@ -132,28 +129,25 @@ class HomeActivity : AppCompatActivity() {
         val currentUserIdForList = FirebaseAuth.getInstance().currentUser?.uid
         if (currentUserIdForList != null) {
 
-            // Aynı Avrupa sunucumuz üzerinden verileri okuyoruz
             val databaseRefList = FirebaseDatabase.getInstance("https://yazilimyapimi1-default-rtdb.europe-west1.firebasedatabase.app/")
                 .getReference("Kelimeler")
                 .child(currentUserIdForList)
 
-            // addValueEventListener: Veritabanında bir şey değiştiği anda listeyi otomatik günceller
             databaseRefList.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+
                     val realWordList = mutableListOf<Word>()
 
-                    // Firebase'deki tüm kelimeleri tek tek gezip listemize ekliyoruz
                     for (wordSnapshot in snapshot.children) {
-                        val word = wordSnapshot.getValue(Word::class.java)
-                        if (word != null) {
-                            realWordList.add(word)
+                        val currentWord = wordSnapshot.getValue(Word::class.java)
+                        if (currentWord != null) {
+                            realWordList.add(currentWord)
                         }
                     }
 
-                    // En son eklenen kelimelerin listenin en üstünde görünmesi için listeyi tersine çeviriyoruz
+                    // Sıralama kriterini de düzgünce çalıştırıyoruz
                     realWordList.sortByDescending { it.eklenmeTarihi }
 
-                    // Oluşan gerçek listeyi Adapter'a verip ekrana yansıtıyoruz
                     val adapter = WordAdapter(realWordList)
                     rvWords.adapter = adapter
                 }
