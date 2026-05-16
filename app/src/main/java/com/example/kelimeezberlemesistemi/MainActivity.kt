@@ -11,26 +11,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 1. KAYIT OL BUTONU (Mavi Buton)
+        // Arkadaşının tanımladığı butonlar ve yönlendirmeler
         val btnSignUp = findViewById<Button>(R.id.btnRegister)
+        val forgotPasswordText = findViewById<TextView>(R.id.textViewForgotPassword)
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
+
+        // Kayıt Ol ekranına geçiş
         btnSignUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
-        } // <--- btnSignUp burada bitti!
+        }
 
-        // 2. ŞİFREMİ UNUTTUM YAZISI
-        val forgotPasswordText = findViewById<TextView>(R.id.textViewForgotPassword)
+        // Şifremi Unuttum ekranına geçiş
         forgotPasswordText.setOnClickListener {
             val intent = Intent(this, ForgotPasswordActivity::class.java)
             startActivity(intent)
-        } // <--- forgotPasswordText burada bitti!
-        // MainActivity.kt içindeki giriş butonu kodun
-        val btnLogin = findViewById<android.widget.Button>(R.id.btnLogin) // ID'ni kontrol et (Görselde btnSignIn gibi duruyor)
+        }
 
+        // Giriş Yap butonu (Ana ekrana geçiş)
         btnLogin.setOnClickListener {
-            val intent = android.content.Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
-            finish() // Giriş yaptıktan sonra geri dönünce login ekranını bir daha görmesin
+            finish()
         }
     }
 }
