@@ -9,6 +9,7 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +31,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // --- 1. BAŞLIK AYARI (Catchy siyah, W mavi ve italik) ---
+        // --- 1. BAŞLIK AYARI ---
         val tvTitle = findViewById<TextView>(R.id.tvAppTitle)
         val text = "CatchyW"
         val spannableString = SpannableString(text)
@@ -43,9 +44,6 @@ class HomeActivity : AppCompatActivity() {
         // --- 2. KELİME EKLEME BUTONU ---
         val fabAdd = findViewById<ExtendedFloatingActionButton>(R.id.fabAddWord)
         fabAdd.setOnClickListener {
-            // (Sistem hatasız çalıştığı için istersen bu Toast mesajlarını silebilir veya yorum satırı yapabilirsin)
-            // Toast.makeText(this@HomeActivity, "1. Butona Tıklandı!", Toast.LENGTH_SHORT).show()
-
             try {
                 val bottomSheet = BottomSheetDialog(this@HomeActivity)
                 val view = layoutInflater.inflate(R.layout.dialog_add_word, null)
@@ -84,7 +82,9 @@ class HomeActivity : AppCompatActivity() {
                             "ingilizce" to eng,
                             "turkce" to tur,
                             "ornekler" to samples,
-                            "eklenmeTarihi" to System.currentTimeMillis()
+                            "eklenmeTarihi" to System.currentTimeMillis(),
+                            "seviye" to 0,
+                            "siradakiTestTarihi" to System.currentTimeMillis() // Eklendiği an teste hazır olur
                         )
 
                         databaseRef.child(wordId).setValue(wordData)
@@ -105,57 +105,78 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // --- 3. DİĞER SAYFALARA GEÇİŞ BUTONLARI ---
-        val btnGoQuiz = findViewById<MaterialCardView>(R.id.btnStartQuiz)
-        btnGoQuiz.setOnClickListener {
+        findViewById<MaterialCardView>(R.id.btnStartQuiz).setOnClickListener {
             startActivity(Intent(this, QuizActivity::class.java))
         }
 
-        val btnGoReport = findViewById<MaterialCardView>(R.id.btnShowReport)
-        btnGoReport.setOnClickListener {
+        findViewById<MaterialCardView>(R.id.btnShowReport).setOnClickListener {
             startActivity(Intent(this, ReportActivity::class.java))
         }
 
-        val btnGoWordle = findViewById<MaterialCardView>(R.id.btnStartWordle)
-        btnGoWordle.setOnClickListener {
+        findViewById<MaterialCardView>(R.id.btnStartWordle).setOnClickListener {
             startActivity(Intent(this, WordleActivity::class.java))
         }
 
-        val btnGoStory = findViewById<MaterialCardView>(R.id.btnGoStory)
-        btnGoStory.setOnClickListener {
+        findViewById<MaterialCardView>(R.id.btnGoStory).setOnClickListener {
             startActivity(Intent(this, StoryActivity::class.java))
         }
 
-        // --- 4. FIREBASE'DEN CANLI KELİME HAVUZUNU ÇEKME ---
+        // --- 4. FIREBASE'DEN CANLI VERİ VE GÜNLÜK HEDEF HESAPLAMA ---
         val rvWords = findViewById<RecyclerView>(R.id.rvWords)
         rvWords.layoutManager = LinearLayoutManager(this)
+
+        val tvDailyGoalDesc = findViewById<TextView>(R.id.tvDailyGoalDesc)
+        val pbDailyGoal = findViewById<ProgressBar>(R.id.pbDailyGoal)
 
         val currentUserIdForList = FirebaseAuth.getInstance().currentUser?.uid
         if (currentUserIdForList != null) {
 
-            // Aynı Avrupa sunucumuz üzerinden verileri okuyoruz
             val databaseRefList = FirebaseDatabase.getInstance("https://yazilimyapimi1-default-rtdb.europe-west1.firebasedatabase.app/")
                 .getReference("Kelimeler")
                 .child(currentUserIdForList)
 
-            // addValueEventListener: Veritabanında bir şey değiştiği anda listeyi otomatik günceller
             databaseRefList.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val realWordList = mutableListOf<Word>()
 
-                    // Firebase'deki tüm kelimeleri tek tek gezip listemize ekliyoruz
+                    val currentTime = System.currentTimeMillis()
+                    var wordsToReviewToday = 0
+                    var totalActiveWords = 0
+
                     for (wordSnapshot in snapshot.children) {
                         val word = wordSnapshot.getValue(Word::class.java)
                         if (word != null) {
                             realWordList.add(word)
+
+                            // Hedef Hesaplama Mantığı
+                            if (word.seviye < 6) {
+                                totalActiveWords++
+                                // Eğer test tarihi geldiyse veya geçmişse:
+                                if (word.siradakiTestTarihi <= currentTime) {
+                                    wordsToReviewToday++
+                                }
+                            }
                         }
                     }
 
-                    // En son eklenen kelimelerin listenin en üstünde görünmesi için listeyi tersine çeviriyoruz
-                    realWordList.sortByDescending { it.eklenmeTarihi }
+                    // Günlük Hedef UI Güncellemesi
+                    if (totalActiveWords == 0) {
+                        tvDailyGoalDesc.text = "Havuzunda test edilecek kelime yok."
+                        pbDailyGoal.progress = 0
+                    } else if (wordsToReviewToday > 0) {
+                        tvDailyGoalDesc.text = "6 Sefer kuralına göre $wordsToReviewToday kelime kaldı"
 
-                    // Oluşan gerçek listeyi Adapter'a verip ekrana yansıtıyoruz
-                    val adapter = WordAdapter(realWordList)
-                    rvWords.adapter = adapter
+                        // İlerleme çubuğu yüzdesi: (Yapılan Kelime Sayısı * 100) / Toplam Aktif Kelime Sayısı
+                        val progress = ((totalActiveWords - wordsToReviewToday) * 100) / totalActiveWords
+                        pbDailyGoal.progress = progress
+                    } else {
+                        tvDailyGoalDesc.text = "Bugünkü tüm tekrarları tamamladın! 🎉"
+                        pbDailyGoal.progress = 100
+                    }
+
+                    // Listeyi Yenile
+                    realWordList.sortByDescending { it.eklenmeTarihi }
+                    rvWords.adapter = WordAdapter(realWordList)
                 }
 
                 override fun onCancelled(error: DatabaseError) {

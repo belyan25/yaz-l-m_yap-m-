@@ -68,20 +68,23 @@
                             android:textStyle="bold"
                             android:textSize="16sp"
                             android:textColor="#333333"/>
+
                         <TextView
+                            android:id="@+id/tvDailyGoalDesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="6 Sefer kuralına göre 12 kelime kaldı"
+                            android:text="Hesaplanıyor..."
                             android:textSize="12sp"
                             android:textColor="#666666"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
 
                     <ProgressBar
+                        android:id="@+id/pbDailyGoal"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:progress="65"
+                        android:progress="0"
                         android:progressTint="#1507D7"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

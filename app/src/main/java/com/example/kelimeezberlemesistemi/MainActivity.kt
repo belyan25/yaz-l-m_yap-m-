@@ -12,14 +12,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // 1. KAYIT OL BUTONU (Mavi Buton)
-        val btnSignUp = findViewById<Button>(R.id.btnRegister)
+        val btnSignUp = findViewById<TextView>(R.id.tvSignUp)
         btnSignUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         } // <--- btnSignUp burada bitti!
 
         // 2. ŞİFREMİ UNUTTUM YAZISI
-        val forgotPasswordText = findViewById<TextView>(R.id.textViewForgotPassword)
+        val forgotPasswordText = findViewById<TextView>(R.id.tvForgotPassword)
         forgotPasswordText.setOnClickListener {
             val intent = Intent(this, ForgotPasswordActivity::class.java)
             startActivity(intent)
