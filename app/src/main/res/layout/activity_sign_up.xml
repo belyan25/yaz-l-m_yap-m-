@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-black"
+                android:fontFamily="sans-serif-light"
                 android:text="W"
                 android:textColor="#8BC34A"
                 android:textSize="38sp"
