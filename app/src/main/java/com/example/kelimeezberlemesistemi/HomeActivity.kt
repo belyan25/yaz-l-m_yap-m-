@@ -120,6 +120,12 @@ class HomeActivity : AppCompatActivity() {
         findViewById<MaterialCardView>(R.id.btnGoStory).setOnClickListener {
             startActivity(Intent(this, StoryActivity::class.java))
         }
+// --- AYARLAR (SETTINGS) BUTONU BAĞLANTISI ---
+
+        val btnGoSettings = findViewById<com.google.android.material.card.MaterialCardView>(R.id.btnSettings)
+        btnGoSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
 
         // --- 4. FIREBASE'DEN CANLI VERİ VE GÜNLÜK HEDEF HESAPLAMA ---
         val rvWords = findViewById<RecyclerView>(R.id.rvWords)
