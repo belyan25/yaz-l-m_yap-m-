@@ -25,9 +25,9 @@ class WordAdapter(private val wordList: List<Word>) :
         val currentWord = wordList[position]
 
         // --- BURAYI YENİ WORD MODELİNE GÖRE DÜZELTTİK ---
-        holder.tvEnglish.text = currentWord.engWordName
-        holder.tvTurkish.text = currentWord.turWordName
-        holder.tvStatus.text = currentWord.status
+        holder.tvEnglish.text = currentWord.ingilizce
+        holder.tvTurkish.text = currentWord.turkce
+        holder.tvStatus.text = currentWord.ornekler
     }
 
     override fun getItemCount(): Int {

@@ -8,12 +8,21 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class HomeActivity : AppCompatActivity() {
 
@@ -26,85 +35,133 @@ class HomeActivity : AppCompatActivity() {
         val text = "CatchyW"
         val spannableString = SpannableString(text)
 
-        // "Catchy" kısmını Siyah yap (0'dan 6'ya kadar)
-        spannableString.setSpan(
-            ForegroundColorSpan(Color.BLACK),
-            0, 6,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
-        // "W" harfini Mavi yap (6'dan 7'ye kadar)
-        spannableString.setSpan(
-            ForegroundColorSpan(Color.parseColor("#1507D7")),
-            6, 7,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
-        // "W" harfini İtalik yap
-        spannableString.setSpan(
-            StyleSpan(Typeface.ITALIC),
-            6, 7,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
+        spannableString.setSpan(ForegroundColorSpan(Color.BLACK), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#1507D7")), 6, 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannableString.setSpan(StyleSpan(Typeface.ITALIC), 6, 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         tvTitle.text = spannableString
-        // -------------------------------------------------------
 
-        // 2. Kelime Ekleme Butonu (Extended FAB)
+        // --- 2. KELİME EKLEME BUTONU ---
         val fabAdd = findViewById<ExtendedFloatingActionButton>(R.id.fabAddWord)
         fabAdd.setOnClickListener {
-            val bottomSheet = BottomSheetDialog(this)
-            val view = layoutInflater.inflate(R.layout.dialog_add_word, null)
-            bottomSheet.setContentView(view)
+            // (Sistem hatasız çalıştığı için istersen bu Toast mesajlarını silebilir veya yorum satırı yapabilirsin)
+            // Toast.makeText(this@HomeActivity, "1. Butona Tıklandı!", Toast.LENGTH_SHORT).show()
 
-            val btnSave = view.findViewById<android.widget.Button>(R.id.btnSaveWord)
-            btnSave?.setOnClickListener {
-                bottomSheet.dismiss()
-                Toast.makeText(this, "Kelime havuza eklendi!", Toast.LENGTH_LONG).show()
+            try {
+                val bottomSheet = BottomSheetDialog(this@HomeActivity)
+                val view = layoutInflater.inflate(R.layout.dialog_add_word, null)
+                bottomSheet.setContentView(view)
+
+                val etEngWord = view.findViewById<TextInputEditText>(R.id.etEngWord)
+                val etTurWord = view.findViewById<TextInputEditText>(R.id.etTurWord)
+                val etSamples = view.findViewById<TextInputEditText>(R.id.etSamples)
+                val btnSave = view.findViewById<Button>(R.id.btnSaveWord)
+
+                btnSave?.setOnClickListener {
+                    val eng = etEngWord.text.toString().trim()
+                    val tur = etTurWord.text.toString().trim()
+                    val samples = etSamples.text.toString().trim()
+
+                    if (eng.isEmpty() || tur.isEmpty()) {
+                        Toast.makeText(this@HomeActivity, "HATA: Kelime alanları boş!", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+
+                    val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+                    if (currentUserId == null) {
+                        Toast.makeText(this@HomeActivity, "HATA: Oturum açmış kullanıcı yok!", Toast.LENGTH_LONG).show()
+                        return@setOnClickListener
+                    }
+
+                    val databaseRef = FirebaseDatabase.getInstance("https://yazilimyapimi1-default-rtdb.europe-west1.firebasedatabase.app/")
+                        .getReference("Kelimeler")
+                        .child(currentUserId)
+
+                    val wordId = databaseRef.push().key
+
+                    if (wordId != null) {
+                        val wordData = hashMapOf(
+                            "id" to wordId,
+                            "ingilizce" to eng,
+                            "turkce" to tur,
+                            "ornekler" to samples,
+                            "eklenmeTarihi" to System.currentTimeMillis()
+                        )
+
+                        databaseRef.child(wordId).setValue(wordData)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    bottomSheet.dismiss()
+                                    Toast.makeText(this@HomeActivity, "Kelime başarıyla eklendi!", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(this@HomeActivity, "FIREBASE HATASI: ${task.exception?.localizedMessage}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                    }
+                }
+                bottomSheet.show()
+            } catch (e: Exception) {
+                Toast.makeText(this@HomeActivity, "PENCERE HATASI: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
             }
-            bottomSheet.show()
         }
 
-        // 3. Sınav Sayfasına Geçiş (MaterialCardView olarak güncellendi)
+        // --- 3. DİĞER SAYFALARA GEÇİŞ BUTONLARI ---
         val btnGoQuiz = findViewById<MaterialCardView>(R.id.btnStartQuiz)
         btnGoQuiz.setOnClickListener {
-            val intent = Intent(this, QuizActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, QuizActivity::class.java))
         }
 
-        // 4. Rapor Sayfasına Geçiş (MaterialCardView olarak güncellendi)
         val btnGoReport = findViewById<MaterialCardView>(R.id.btnShowReport)
         btnGoReport.setOnClickListener {
-            val intent = Intent(this, ReportActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, ReportActivity::class.java))
         }
 
-        // 5. Wordle Sayfasına Geçiş (MaterialCardView olarak güncellendi)
         val btnGoWordle = findViewById<MaterialCardView>(R.id.btnStartWordle)
         btnGoWordle.setOnClickListener {
-            val intent = Intent(this, WordleActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, WordleActivity::class.java))
         }
 
-        // 6. Yapay Zeka Hikaye Sayfasına Geçiş (MaterialCardView olarak güncellendi)
         val btnGoStory = findViewById<MaterialCardView>(R.id.btnGoStory)
         btnGoStory.setOnClickListener {
-            val intent = Intent(this@HomeActivity, StoryActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, StoryActivity::class.java))
         }
 
-        // 7. Örnek Kelime Listesi (RecyclerView)
-        val exampleWords: List<com.example.kelimeezberlemesistemi.Word> = listOf(
-            com.example.kelimeezberlemesistemi.Word("Apple", "Elma", "4/6"),
-            com.example.kelimeezberlemesistemi.Word("Success", "Başarı", "6/6"),
-            com.example.kelimeezberlemesistemi.Word("Study", "Ders Çalışmak", "2/6"),
-            com.example.kelimeezberlemesistemi.Word("Computer", "Bilgisayar", "0/6"),
-            com.example.kelimeezberlemesistemi.Word("Galaxy", "Gökada", "5/6")
-        )
+        // --- 4. FIREBASE'DEN CANLI KELİME HAVUZUNU ÇEKME ---
+        val rvWords = findViewById<RecyclerView>(R.id.rvWords)
+        rvWords.layoutManager = LinearLayoutManager(this)
 
-        val rvWords = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rvWords)
-        rvWords.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
-        val adapter = com.example.kelimeezberlemesistemi.WordAdapter(exampleWords)
-        rvWords.adapter = adapter
+        val currentUserIdForList = FirebaseAuth.getInstance().currentUser?.uid
+        if (currentUserIdForList != null) {
+
+            // Aynı Avrupa sunucumuz üzerinden verileri okuyoruz
+            val databaseRefList = FirebaseDatabase.getInstance("https://yazilimyapimi1-default-rtdb.europe-west1.firebasedatabase.app/")
+                .getReference("Kelimeler")
+                .child(currentUserIdForList)
+
+            // addValueEventListener: Veritabanında bir şey değiştiği anda listeyi otomatik günceller
+            databaseRefList.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val realWordList = mutableListOf<Word>()
+
+                    // Firebase'deki tüm kelimeleri tek tek gezip listemize ekliyoruz
+                    for (wordSnapshot in snapshot.children) {
+                        val word = wordSnapshot.getValue(Word::class.java)
+                        if (word != null) {
+                            realWordList.add(word)
+                        }
+                    }
+
+                    // En son eklenen kelimelerin listenin en üstünde görünmesi için listeyi tersine çeviriyoruz
+                    realWordList.sortByDescending { it.eklenmeTarihi }
+
+                    // Oluşan gerçek listeyi Adapter'a verip ekrana yansıtıyoruz
+                    val adapter = WordAdapter(realWordList)
+                    rvWords.adapter = adapter
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@HomeActivity, "Veri çekme hatası: ${error.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
     }
 }
