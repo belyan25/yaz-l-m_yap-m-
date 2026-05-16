@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Sürükleme Çubuğu -->
         <View
             android:layout_width="40dp"
             android:layout_height="4dp"
@@ -71,7 +70,7 @@
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Örnek Cümleler (Story 2 için çoklu satır) -->
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -87,31 +86,7 @@
                 android:lines="3" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Resim Alanı (Story 2: Picture) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Kelime Görseli"
-            android:layout_marginTop="15dp"
-            android:textStyle="bold"/>
 
-        <ImageView
-            android:id="@+id/ivWordPicture"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginTop="8dp"
-            android:scaleType="centerCrop"
-            android:src="@android:drawable/ic_menu_gallery"
-            android:background="#F0F0F0" />
-
-        <Button
-            android:id="@+id/btnSelectImage"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Resim Seç veya Değiştir" />
-
-        <!-- Kaydet Butonu -->
         <Button
             android:id="@+id/btnSaveWord"
             android:layout_width="match_parent"
@@ -120,7 +95,7 @@
             android:text="KELİMEYİ HAVUZA EKLE"
             android:textSize="16sp"
             app:cornerRadius="12dp"
-            android:backgroundTint="#6C5CE7"/>
+            android:backgroundTint="#1507D7"/>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
