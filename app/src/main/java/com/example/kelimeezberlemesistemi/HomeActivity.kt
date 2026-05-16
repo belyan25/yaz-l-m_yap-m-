@@ -8,11 +8,11 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 class HomeActivity : AppCompatActivity() {
@@ -57,7 +57,7 @@ class HomeActivity : AppCompatActivity() {
             val view = layoutInflater.inflate(R.layout.dialog_add_word, null)
             bottomSheet.setContentView(view)
 
-            val btnSave = view.findViewById<Button>(R.id.btnSaveWord)
+            val btnSave = view.findViewById<android.widget.Button>(R.id.btnSaveWord)
             btnSave?.setOnClickListener {
                 bottomSheet.dismiss()
                 Toast.makeText(this, "Kelime havuza eklendi!", Toast.LENGTH_LONG).show()
@@ -65,35 +65,35 @@ class HomeActivity : AppCompatActivity() {
             bottomSheet.show()
         }
 
-        // 3. Sınav Sayfasına Geçiş
-        val btnGoQuiz = findViewById<Button>(R.id.btnStartQuiz)
+        // 3. Sınav Sayfasına Geçiş (MaterialCardView olarak güncellendi)
+        val btnGoQuiz = findViewById<MaterialCardView>(R.id.btnStartQuiz)
         btnGoQuiz.setOnClickListener {
             val intent = Intent(this, QuizActivity::class.java)
             startActivity(intent)
         }
 
-        // 4. Rapor Sayfasına Geçiş
-        val btnGoReport = findViewById<Button>(R.id.btnShowReport)
+        // 4. Rapor Sayfasına Geçiş (MaterialCardView olarak güncellendi)
+        val btnGoReport = findViewById<MaterialCardView>(R.id.btnShowReport)
         btnGoReport.setOnClickListener {
             val intent = Intent(this, ReportActivity::class.java)
             startActivity(intent)
         }
 
-        // 5. Wordle Sayfasına Geçiş
-        val btnGoWordle = findViewById<Button>(R.id.btnStartWordle)
+        // 5. Wordle Sayfasına Geçiş (MaterialCardView olarak güncellendi)
+        val btnGoWordle = findViewById<MaterialCardView>(R.id.btnStartWordle)
         btnGoWordle.setOnClickListener {
             val intent = Intent(this, WordleActivity::class.java)
             startActivity(intent)
         }
 
-        // --- 6. YAPAY ZEKA HİKAYE SAYFASINA GEÇİŞ ---
-        val btnGoStory = findViewById<Button>(R.id.btnGoStory)
+        // 6. Yapay Zeka Hikaye Sayfasına Geçiş (MaterialCardView olarak güncellendi)
+        val btnGoStory = findViewById<MaterialCardView>(R.id.btnGoStory)
         btnGoStory.setOnClickListener {
             val intent = Intent(this@HomeActivity, StoryActivity::class.java)
             startActivity(intent)
         }
 
-        // --- 7. ÖRNEK KELİME LİSTESİ (Açıkça Tip Belirtildi) ---
+        // 7. Örnek Kelime Listesi (RecyclerView)
         val exampleWords: List<com.example.kelimeezberlemesistemi.Word> = listOf(
             com.example.kelimeezberlemesistemi.Word("Apple", "Elma", "4/6"),
             com.example.kelimeezberlemesistemi.Word("Success", "Başarı", "6/6"),
@@ -107,5 +107,4 @@ class HomeActivity : AppCompatActivity() {
         val adapter = com.example.kelimeezberlemesistemi.WordAdapter(exampleWords)
         rvWords.adapter = adapter
     }
-
 }

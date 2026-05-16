@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA">
+    android:background="#0D353434">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:text="Zincir Kelimeler: ..."
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#333333"
+            android:textColor="#000000"
             android:layout_marginBottom="16dp"
             android:gravity="center"/>
 
@@ -26,7 +26,7 @@
             android:id="@+id/btnGenerateStory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="YAPAY ZEKA İLE HİKAYE OLUŞTUR"
+            android:text="HADİ HİKAYE OLUŞTURALIM :)"
             android:backgroundTint="#353434"
             android:textColor="@android:color/white"
             android:layout_marginBottom="20dp"/>
