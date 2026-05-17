@@ -13,45 +13,54 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        setContentView(R.layout.activity_settings) // XML dosyanın adının bu olduğundan emin ol
 
         val btnBack = findViewById<Button>(R.id.btnSettingsBack)
         val etWordLimit = findViewById<TextInputEditText>(R.id.etWordLimit)
         val btnSave = findViewById<Button>(R.id.btnSaveSettings)
         val btnLogout = findViewById<Button>(R.id.btnSettingsLogout)
 
-        // Kaydedilmiş ayarı çekiyoruz (Hocanın istediği gibi varsayılan 10)
-        val sharedPreferences = getSharedPreferences("CatchyWordsPrefs", Context.MODE_PRIVATE)
-        val savedLimit = sharedPreferences.getInt("word_limit", 10)
+        // 1. MEVCUT AYARI YÜKLE: Kaydedilmiş limiti getir (Daha önce kaydedilmediyse varsayılan 10 olur)
+        val sharedPref = getSharedPreferences("UygulamaAyarlari", Context.MODE_PRIVATE)
+        val mevcutLimit = sharedPref.getInt("SoruLimiti", 10)
+        etWordLimit.setText(mevcutLimit.toString())
 
-        etWordLimit.setText(savedLimit.toString())
-
-        // --- GERİ DÖNÜŞ ---
+        // 2. GERİ TUŞU
         btnBack.setOnClickListener {
-            finish()
+            finish() // Sayfayı kapatır ve bir önceki sayfaya (HomeActivity) döner
         }
 
-        // --- SADECE 4. STORY ZORUNLU KELİME LİMİTİ KAYDI ---
+        // 3. AYARLARI KAYDETME
         btnSave.setOnClickListener {
-            val limitText = etWordLimit.text.toString().trim()
+            val limitStr = etWordLimit.text.toString().trim()
 
-            if (limitText.isEmpty()) {
-                Toast.makeText(this, "Lütfen kelime sayısı girin!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            if (limitStr.isNotEmpty()) {
+                val limit = limitStr.toIntOrNull()
+
+                if (limit != null && limit > 0) {
+                    // SharedPreferences'ı aç ve yeni limiti yaz
+                    val editor = sharedPref.edit()
+                    editor.putInt("SoruLimiti", limit)
+                    editor.apply() // Değişiklikleri kaydet
+
+                    Toast.makeText(this, "Günlük soru limiti $limit olarak ayarlandı!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Lütfen 0'dan büyük geçerli bir sayı girin!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Limit alanı boş bırakılamaz!", Toast.LENGTH_SHORT).show()
             }
-
-            val editor = sharedPreferences.edit()
-            editor.putInt("word_limit", limitText.toInt())
-            editor.apply()
-
-            Toast.makeText(this, "Yeni kelime sınırı başarıyla güncellendi!", Toast.LENGTH_SHORT).show()
-            finish()
         }
 
-        // --- ÇIKIŞ YAP ---
+        // 4. ÇIKIŞ YAPMA (LOGOUT)
         btnLogout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
+            Toast.makeText(this, "Başarıyla çıkış yapıldı.", Toast.LENGTH_SHORT).show()
+
+            // Çıkış yaptıktan sonra kullanıcıyı giriş/kayıt ekranına yönlendiriyoruz
+            // DİKKAT: Eğer giriş sayfanın adı farklıysa (örneğin LoginActivity), aşağıdaki MainActivity yazısını ona göre değiştir!
             val intent = Intent(this, MainActivity::class.java)
+            // Geri tuşuna basıldığında tekrar uygulamanın içine girmemesi için geçmişi siliyoruz
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()

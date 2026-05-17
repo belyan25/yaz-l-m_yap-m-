@@ -11,6 +11,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import android.content.Context
 
 class QuizActivity : AppCompatActivity() {
 
@@ -79,7 +80,18 @@ class QuizActivity : AppCompatActivity() {
                     return
                 }
 
+                // YENİ KOD: AYARLARDAN LİMİTİ ÇEK VE UYGULA
                 quizWords.shuffle() // Soruları karıştır
+
+                // Ayarlardaki limiti okuyoruz (Eğer ayar yapılmadıysa varsayılan 10 alır)
+                val sharedPref = getSharedPreferences("UygulamaAyarlari", Context.MODE_PRIVATE)
+                val soruLimiti = sharedPref.getInt("SoruLimiti", 10)
+
+                // Havuzdaki kelimeleri limite göre kırpıyoruz
+                val limitlenmisSorular = quizWords.take(soruLimiti).toMutableList()
+                quizWords.clear()
+                quizWords.addAll(limitlenmisSorular)
+
                 showQuestion()
             }
 
