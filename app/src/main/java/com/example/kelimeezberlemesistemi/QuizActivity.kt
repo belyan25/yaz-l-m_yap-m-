@@ -12,6 +12,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import android.content.Context
+import android.graphics.Color
+import android.os.Handler
+import android.os.Looper
 
 class QuizActivity : AppCompatActivity() {
 
@@ -27,6 +30,9 @@ class QuizActivity : AppCompatActivity() {
     private val quizWords = mutableListOf<Word>() // Sadece vakti gelmiş kelimeler
     private var currentQuestionIndex = 0
 
+    // Butonları döngüde kolayca yönetmek için liste halinde tutacağız
+    private lateinit var buttonList: List<Button>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
@@ -39,13 +45,15 @@ class QuizActivity : AppCompatActivity() {
         btnOption3 = findViewById(R.id.btnOption3)
         btnOption4 = findViewById(R.id.btnOption4)
 
+        // Buton listemizi oluşturuyoruz
+        buttonList = listOf(btnOption1, btnOption2, btnOption3, btnOption4)
+
         fetchWordsFromFirebase()
     }
 
     private fun fetchWordsFromFirebase() {
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-        // DİKKAT: Kendi Avrupa sunucunun linkini buraya eklemeyi UNUTMA!
         val databaseRef = FirebaseDatabase.getInstance("https://yazilimyapimi1-default-rtdb.europe-west1.firebasedatabase.app/")
             .getReference("Kelimeler")
             .child(currentUserId)
@@ -61,7 +69,6 @@ class QuizActivity : AppCompatActivity() {
                     val word = child.getValue(Word::class.java)
                     if (word != null) {
                         allWords.add(word)
-                        // Sadece "Sıradaki test tarihi gelmiş" ve "Tamamen ezberlenmemiş (seviye < 6)" kelimeleri teste al
                         if (word.siradakiTestTarihi <= currentTime && word.seviye < 6) {
                             quizWords.add(word)
                         }
@@ -80,14 +87,12 @@ class QuizActivity : AppCompatActivity() {
                     return
                 }
 
-                // YENİ KOD: AYARLARDAN LİMİTİ ÇEK VE UYGULA
                 quizWords.shuffle() // Soruları karıştır
 
                 // Ayarlardaki limiti okuyoruz (Eğer ayar yapılmadıysa varsayılan 10 alır)
                 val sharedPref = getSharedPreferences("UygulamaAyarlari", Context.MODE_PRIVATE)
                 val soruLimiti = sharedPref.getInt("SoruLimiti", 10)
 
-                // Havuzdaki kelimeleri limite göre kırpıyoruz
                 val limitlenmisSorular = quizWords.take(soruLimiti).toMutableList()
                 quizWords.clear()
                 quizWords.addAll(limitlenmisSorular)
@@ -108,63 +113,90 @@ class QuizActivity : AppCompatActivity() {
             return
         }
 
+        // YENİ SORUYA GEÇERKEN TÜM BUTON RENKLERİNİ ESKİSİ GİBİ SIFIRLIYORUZ
+        for (btn in buttonList) {
+            btn.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            btn.setTextColor(Color.WHITE)
+            btn.isEnabled = true // Butonları tekrar tıklanabilir yapıyoruz
+        }
+
         val currentWord = quizWords[currentQuestionIndex]
         tvQuestion.text = currentWord.ingilizce
         tvStatus.text = "Soru: ${currentQuestionIndex + 1} / ${quizWords.size} (Mevcut Seviye: ${currentWord.seviye}/6)"
 
-        // İlerleme çubuğunu güncelle
         progressQuiz.progress = ((currentQuestionIndex) * 100) / quizWords.size
 
-        // Şıkları oluştur (1 Doğru, 3 Rastgele Yanlış)
         val wrongAnswers = allWords.filter { it.id != currentWord.id }.shuffled().take(3).map { it.turkce }
         val options = mutableListOf(currentWord.turkce)
         options.addAll(wrongAnswers)
-        options.shuffle() // Şıkların yerini karıştır
+        options.shuffle()
 
-        val buttons = listOf(btnOption1, btnOption2, btnOption3, btnOption4)
-        for (i in buttons.indices) {
-            buttons[i].text = options[i]
-            buttons[i].setOnClickListener {
-                checkAnswer(options[i], currentWord)
+        for (i in buttonList.indices) {
+            buttonList[i].text = options[i]
+            buttonList[i].setOnClickListener {
+                // Kullanıcı tıkladığı an diğer butonlara basıp kopya çekmesin diye hepsini kilitliyoruz
+                disableAllButtons()
+                // Cevabı kontrol etme fonksiyonuna tıklanan butonu da gönderiyoruz
+                checkAnswer(buttonList[i], options[i], currentWord)
             }
         }
     }
 
-    private fun checkAnswer(selectedAnswer: String, word: Word) {
+    private fun checkAnswer(clickedButton: Button, selectedAnswer: String, word: Word) {
         val isCorrect = (selectedAnswer == word.turkce)
 
+        // RENKLENDİRME SİHRİ BURADA BAŞLIYOR ✨
         if (isCorrect) {
             word.seviye += 1
-            Toast.makeText(this, "Doğru! Yeni Seviye: ${word.seviye}/6", Toast.LENGTH_SHORT).show()
+            // Doğru şık tık diye Rapor yeşili (#8BC34A) yanıyor!
+            clickedButton.setBackgroundColor(Color.parseColor("#8BC34A"))
+            clickedButton.setTextColor(Color.WHITE)
+            Toast.makeText(this, "Doğru! Yeni Seviye: ${word.seviye}/6 🎉", Toast.LENGTH_SHORT).show()
         } else {
             word.seviye = 0
-            Toast.makeText(this, "Yanlış! Seviye sıfırlandı.", Toast.LENGTH_SHORT).show()
+            // Yanlış şık CatchyWords pembesi (#E91E63) yanıyor!
+            clickedButton.setBackgroundColor(Color.parseColor("#E91E63"))
+            clickedButton.setTextColor(Color.WHITE)
+
+            // Kullanıcı yanlış bildiğinde asıl doğru olan şık hangisiyse onu da yeşil yakıp gösterelim (Jüri bayılır buna)
+            for (btn in buttonList) {
+                if (btn.text.toString() == word.turkce) {
+                    btn.setBackgroundColor(Color.parseColor("#8BC34A"))
+                    btn.setTextColor(Color.WHITE)
+                }
+            }
+            Toast.makeText(this, "Yanlış! Seviye sıfırlandı. 🌸", Toast.LENGTH_SHORT).show()
         }
 
-        // Bir sonraki tarihi hesapla
         word.siradakiTestTarihi = calculateNextDate(word.seviye)
-
-        // Firebase'i güncelle
         updateWordInFirebase(word)
 
-        // Sonraki soruya geç
-        currentQuestionIndex++
-        showQuestion()
+        // BURASI ÇOK KRİTİK: Kullanıcı rengi gözüyle 1.5 saniye görebilsin, sonra sonraki soruya geçsin
+        Handler(Looper.getMainLooper()).postDelayed({
+            currentQuestionIndex++
+            showQuestion()
+        }, 1500) // 1500 milisaniye = 1.5 saniye bekletme süresi
     }
 
-    // İsterlerdeki tarihlere göre hesaplama algoritması
+    // Tıklama anında butonları kilitleme fonksiyonu
+    private fun disableAllButtons() {
+        for (btn in buttonList) {
+            btn.isEnabled = false
+        }
+    }
+
     private fun calculateNextDate(seviye: Int): Long {
         val now = System.currentTimeMillis()
         val dayInMillis = 24L * 60 * 60 * 1000L
 
         return when (seviye) {
-            0 -> now // Yanlış bilindiyse hemen/aynı gün tekrar havuzuna düşer
-            1 -> now + (1 * dayInMillis)   // 1 gün sonra
-            2 -> now + (7 * dayInMillis)   // 1 hafta sonra
-            3 -> now + (30 * dayInMillis)  // 1 ay sonra
-            4 -> now + (90 * dayInMillis)  // 3 ay sonra
-            5 -> now + (180 * dayInMillis) // 6 ay sonra
-            6 -> now + (365 * dayInMillis) // 1 yıl sonra (Bilinen kelime havuzu)
+            0 -> now
+            1 -> now + (1 * dayInMillis)
+            2 -> now + (7 * dayInMillis)
+            3 -> now + (30 * dayInMillis)
+            4 -> now + (90 * dayInMillis)
+            5 -> now + (180 * dayInMillis)
+            6 -> now + (365 * dayInMillis)
             else -> now
         }
     }
