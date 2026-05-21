@@ -41,6 +41,7 @@ class StoryActivity : AppCompatActivity() {
         // 3. Butona tıklandığında artık simülasyon değil, gerçek yapay zeka çalışacak
         btnGenerateStory.setOnClickListener {
 
+
             tvAiStory.text = "Yapay zeka hikayeyi oluşturuyor, lütfen bekleyin..."
 
             // İnternet tabanlı yapay zeka işlemleri arka planda (Coroutine) çalışmalıdır

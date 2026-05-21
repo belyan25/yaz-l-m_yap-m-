@@ -71,6 +71,7 @@ class ReportActivity : AppCompatActivity() {
         // Dosyayı Cihaz Hafızasına (Downloads klasörüne) Yazma
         val targetFile = File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "Kelime_Ezberleme_Analiz_Raporu.pdf")
 
+
         try {
             pdfDocument.writeTo(FileOutputStream(targetFile))
             Toast.makeText(this, "Rapor başarıyla indirildi:\n${targetFile.absolutePath}", Toast.LENGTH_LONG).show()
