@@ -120,25 +120,26 @@ class WordleActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val fiveLetterWords = mutableListOf<String>()
 
-                // Tüm kelimeleri gezip sadece 5 harfli olanları ayıklıyoruz
+                // Tüm kelimeleri gezip sadece "5 harfli" VE "Öğrenmesi Tamamlanmış" (Seviye 6) olanları ayıklıyoruz
                 for (child in snapshot.children) {
                     val word = child.getValue(Word::class.java)
                     if (word != null) {
                         val engWord = word.ingilizce.trim().uppercase()
-                        // Eğer boşluksuz 5 harfliyse listeye ekle
-                        if (engWord.length == 5) {
+
+                        // YENİ ŞART: Hem uzunluk 5 olacak, hem de seviye 6'ya ulaşmış olacak
+                        if (engWord.length == 5 && word.seviye >= 6) {
                             fiveLetterWords.add(engWord)
                         }
                     }
                 }
 
                 if (fiveLetterWords.isNotEmpty()) {
-                    // 5 harfli kelimeler arasından rastgele birini seç
+                    // Şartı sağlayan kelimeler arasından rastgele birini seç
                     targetWord = fiveLetterWords.random()
                 } else {
-                    // Eğer havuzda hiç 5 harfli kelime yoksa çökmemesi için joker bir kelime ata
+                    // Eğer havuzda hiç TAM EZBERLENMİŞ 5 harfli kelime yoksa
                     targetWord = "APPLE"
-                    Toast.makeText(this@WordleActivity, "Havuzunuzda 5 harfli kelime bulunamadı! Varsayılan kelime seçildi.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@WordleActivity, "Havuzunuzda tam ezberlenmiş 5 harfli kelime yok! Varsayılan kelime seçildi.", Toast.LENGTH_LONG).show()
                 }
 
                 // Kelime çekildiğine göre butonu aktifleştir

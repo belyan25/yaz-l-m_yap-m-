@@ -1,7 +1,6 @@
 package com.example.kelimeezberlemesistemi
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
+
 import android.graphics.pdf.PdfDocument
 import android.os.Bundle
 import android.os.Environment
@@ -9,20 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
-class ReportActivity : AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_report)
-
-        // 1. XML Dosyasındaki Elemanları Bağlama
-        val tvTotalWords = findViewById<TextView>(R.id.tvTotalWords)
-        val tvLearnedWords = findViewById<TextView>(R.id.tvLearnedWords)
-        val btnPrint = findViewById<Button>(R.id.btnPrintReport)
 
         // 2. Dinamik Veri Setleme Alanı
         // TODO: Projenizdeki Room Veritabanını bağladığınızda verileri buradan çekmelisiniz.
@@ -36,50 +22,98 @@ class ReportActivity : AppCompatActivity() {
 
         // 3. PDF Çıktısı Alma Buton Dinleyicisi (İster 5)
         btnPrint.setOnClickListener {
-            Toast.makeText(this, "Rapor PDF olarak hazırlanıyor...", Toast.LENGTH_SHORT).show()
-            exportReportAsPdf()
+
         }
     }
 
-    /**
-     * Ekranda görünen mevcut analiz raporu arayüzünü yakalar,
-     * PDF dokümanına dönüştürür ve cihazın İndirilenler klasörüne kaydeder.
-     */
-    private fun exportReportAsPdf() {
-        // Ekrandaki kök arayüz görünümünü yakala
-        val rootView = window.decorView.rootView
+    private fun fetchReportData() {
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val databaseRef = FirebaseDatabase.getInstance("https://yazilimyapimi1-default-rtdb.europe-west1.firebasedatabase.app/")
+            .getReference("Kelimeler")
+            .child(currentUserId)
 
-        // Görünümün genişlik ve yükseklik değerleri henüz oluşmadıysa sıfır hatası almamak için kontrol
-        if (rootView.width <= 0 || rootView.height <= 0) {
-            Toast.makeText(this, "Arayüz henüz tamamen yüklenemedi, tekrar deneyin.", Toast.LENGTH_SHORT).show()
-            return
-        }
+        databaseRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                totalWordCount = snapshot.childrenCount.toInt()
+                learnedWordCount = 0
+                dailyWordCount = 0
 
-        val bitmap = Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        rootView.draw(canvas)
+                val todayDateStr = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
 
-        // PDF Sayfası Oluşturma
+                for (child in snapshot.children) {
+                    val word = child.getValue(Word::class.java)
+                    if (word != null) {
+                        if (word.seviye >= 6) {
+                            learnedWordCount++
+                        }
+
+                        val wordDateStr = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date(word.eklenmeTarihi))
+                        if (wordDateStr == todayDateStr || word.siradakiTestTarihi > System.currentTimeMillis()) {
+                            dailyWordCount++
+                        }
+                    }
+                }
+
+                tvTotalWords.text = totalWordCount.toString()
+                tvLearnedWords.text = learnedWordCount.toString()
+                tvDailyWordsCount.text = "$dailyWordCount Kelime"
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@ReportActivity, "Veri çekme hatası: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    // --- PDF OLUŞTURMA VE OTOMATİK AÇMA BÖLÜMÜ ---
+    private fun generatePdfReport() {
         val pdfDocument = PdfDocument()
-        val pageInfo = PdfDocument.PageInfo.Builder(rootView.width, rootView.height, 1).create()
+        val pageInfo = PdfDocument.PageInfo.Builder(350, 450, 1).create()
         val page = pdfDocument.startPage(pageInfo)
+        val canvas = page.canvas
+        val paint = Paint()
 
-        // Ekran görüntüsünü PDF sayfasına çizdirme
-        page.canvas.drawBitmap(bitmap, 0f, 0f, null)
+        paint.textSize = 20f
+        paint.isFakeBoldText = true
+        canvas.drawText("KELİME ÖĞRENME RAPORU", 20f, 50f, paint)
+
+        paint.textSize = 14f
+        paint.isFakeBoldText = false
+        canvas.drawText("Rapor Tarihi: ${SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date())}", 20f, 80f, paint)
+
+        canvas.drawText("Toplam Havuzdaki Kelime: $totalWordCount", 20f, 120f, paint)
+        canvas.drawText("Tamamen Ezberlenen (Seviye 6): $learnedWordCount", 20f, 150f, paint)
+        canvas.drawText("Bugün Çalışılan Kelime (Günlük): $dailyWordCount", 20f, 180f, paint)
+
+        val basariOrani = if (totalWordCount > 0) (learnedWordCount * 100) / totalWordCount else 0
+        paint.isFakeBoldText = true
+        canvas.drawText("Genel Başarı Oranı: %$basariOrani", 20f, 220f, paint)
+
         pdfDocument.finishPage(page)
 
-        // Dosyayı Cihaz Hafızasına (Downloads klasörüne) Yazma
-        val targetFile = File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "Kelime_Ezberleme_Analiz_Raporu.pdf")
-
+        val fileName = "Kelime_Raporu_${System.currentTimeMillis()}.pdf"
+        val file = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName)
 
         try {
-            pdfDocument.writeTo(FileOutputStream(targetFile))
-            Toast.makeText(this, "Rapor başarıyla indirildi:\n${targetFile.absolutePath}", Toast.LENGTH_LONG).show()
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Toast.makeText(this, "PDF kaydedilirken bir hata oluştu: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-        } finally {
+            pdfDocument.writeTo(FileOutputStream(file))
             pdfDocument.close()
+
+            val uri = FileProvider.getUriForFile(this, "com.example.kelimeezberlemesistemi.provider", file)
+
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "application/pdf")
+                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NO_HISTORY
+            }
+
+            startActivity(intent)
+
+        } catch (e: Exception) {
+            Toast.makeText(this, "Cihazda PDF okuyucu bulunamadı! Dosya kaydedildi.", Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 }

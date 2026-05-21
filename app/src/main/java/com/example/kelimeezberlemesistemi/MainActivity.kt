@@ -1,7 +1,13 @@
 package com.example.kelimeezberlemesistemi
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,26 +17,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 1. KAYIT OL BUTONU (Mavi Buton)
-        val btnSignUp = findViewById<TextView>(R.id.tvSignUp)
+
         btnSignUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
-        } // <--- btnSignUp burada bitti!
+        }
 
-        // 2. ŞİFREMİ UNUTTUM YAZISI
-        val forgotPasswordText = findViewById<TextView>(R.id.tvForgotPassword)
+
         forgotPasswordText.setOnClickListener {
             val intent = Intent(this, ForgotPasswordActivity::class.java)
             startActivity(intent)
-        } // <--- forgotPasswordText burada bitti!
-        // MainActivity.kt içindeki giriş butonu kodun
-        val btnLogin = findViewById<android.widget.Button>(R.id.btnLogin) // ID'ni kontrol et (Görselde btnSignIn gibi duruyor)
+        }
 
+
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
         btnLogin.setOnClickListener {
-            val intent = android.content.Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
-            finish() // Giriş yaptıktan sonra geri dönünce login ekranını bir daha görmesin
+            finish()
         }
     }
 }

@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">KelimeEzberlemeSistemi</string>
+    <string name="app_name">CatchyW</string>
+
+    <string name="title_activity_login">Giriş Yap</string>
+    <string name="title_activity_sign_up">Kayıt Ol</string>
+    <string name="title_activity_forgot_password">Şifremi Unuttum</string>
+    <string name="title_activity_home">Ana Sayfa</string>
+    <string name="title_activity_story">AI Word Chain</string>
 </resources>

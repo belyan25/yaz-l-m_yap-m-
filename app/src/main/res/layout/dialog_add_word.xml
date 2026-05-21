@@ -51,10 +51,10 @@
                 android:id="@+id/btnSpeak"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@android:drawable/ic_btn_speak_now"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_marginStart="10dp"
-                android:contentDescription="Sesli Oku" />
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Sesli Oku"
+                android:src="@android:drawable/ic_btn_speak_now" />
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
