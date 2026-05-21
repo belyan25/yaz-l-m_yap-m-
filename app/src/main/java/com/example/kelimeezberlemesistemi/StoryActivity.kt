@@ -35,7 +35,7 @@ class StoryActivity : AppCompatActivity() {
         // "BURAYA_API_KEY_GELECEK" yazan yere Google AI Studio'dan alacağın ücretsiz anahtarı koymalısın.
         val generativeModel = GenerativeModel(
             modelName = "gemini-pro",
-            apiKey = "AIzaSyBATYkJ9N0RU_ydsllTbu7-Y5DxqrTaDQs"
+            apiKey = com.example.kelimeezberlemesistemi.BuildConfig.GEMINI_API_KEY
         )
 
         // 3. Butona tıklandığında artık simülasyon değil, gerçek yapay zeka çalışacak

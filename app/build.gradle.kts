@@ -7,6 +7,9 @@ plugins {
 android {
     namespace = "com.example.kelimeezberlemesistemi"
     compileSdk = 36 // DÜZELTİLDİ: O karmaşık blok yerine standardı budur
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.example.kelimeezberlemesistemi"
