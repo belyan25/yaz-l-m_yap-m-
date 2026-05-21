@@ -124,27 +124,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
             android:gravity="center"
-            android:layout_marginTop="8dp">
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hesabın yok mu? "
                 android:textColor="#666666"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/btnRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="Kayıt Ol"
                 android:textColor="#E91E63"
-                android:textStyle="bold"
                 android:textSize="14sp"
-                android:clickable="true"
-                android:focusable="true"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>

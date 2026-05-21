@@ -1,7 +1,6 @@
 package com.example.kelimeezberlemesistemi
 
-import android.content.Intent
-import android.graphics.Paint
+
 import android.graphics.pdf.PdfDocument
 import android.os.Bundle
 import android.os.Environment
@@ -9,55 +8,21 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import java.io.File
-import java.io.FileOutputStream
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
-class ReportActivity : AppCompatActivity() {
 
-    private var totalWordCount = 0
-    private var learnedWordCount = 0
-    private var dailyWordCount = 0
+        // 2. Dinamik Veri Setleme Alanı
+        // TODO: Projenizdeki Room Veritabanını bağladığınızda verileri buradan çekmelisiniz.
+        // Örn: val totalCount = db.wordDao().getTotalWordsCount()
+        val totalWordsCount = 24
+        val learnedWordsCount = 8
 
-    private lateinit var tvTotalWords: TextView
-    private lateinit var tvLearnedWords: TextView
-    private lateinit var tvDailyWordsCount: TextView
-    private lateinit var btnPrint: Button
-    private lateinit var btnBack: Button
+        // Verileri arayüze yazdırıyoruz
+        tvTotalWords.text = totalWordsCount.toString()
+        tvLearnedWords.text = learnedWordsCount.toString()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_report)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Öğrenme Raporu"
-
-        tvTotalWords = findViewById(R.id.tvTotalWords)
-        tvLearnedWords = findViewById(R.id.tvLearnedWords)
-        tvDailyWordsCount = findViewById(R.id.tvDailyWordsCount)
-        btnPrint = findViewById(R.id.btnPrintReport)
-        btnBack = findViewById(R.id.btnReportBack)
-
-        btnBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-
-        fetchReportData()
-
+        // 3. PDF Çıktısı Alma Buton Dinleyicisi (İster 5)
         btnPrint.setOnClickListener {
-            if (totalWordCount == 0) {
-                Toast.makeText(this, "Raporlanacak kelime bulunamadı!", Toast.LENGTH_SHORT).show()
-            } else {
-                generatePdfReport()
-            }
+
         }
     }
 

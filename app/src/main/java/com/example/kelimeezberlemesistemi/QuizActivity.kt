@@ -19,6 +19,7 @@ import android.os.Looper
 class QuizActivity : AppCompatActivity() {
 
     private lateinit var progressQuiz: ProgressBar
+
     private lateinit var tvStatus: TextView
     private lateinit var tvQuestion: TextView
     private lateinit var btnOption1: Button

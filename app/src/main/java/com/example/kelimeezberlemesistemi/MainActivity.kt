@@ -18,22 +18,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        val tvLoginTitle = findViewById<TextView>(R.id.tvLoginTitle)
-        val titleText = "CatchyWords"
-        val spannableString = SpannableString(titleText)
-        spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#E91E63")), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        spannableString.setSpan(StyleSpan(Typeface.BOLD), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#8BC34A")), 6, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        spannableString.setSpan(StyleSpan(Typeface.ITALIC), 6, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        tvLoginTitle.text = spannableString
-
-        val btnSignUp = findViewById<TextView>(R.id.btnRegister)
         btnSignUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
 
-        val forgotPasswordText = findViewById<TextView>(R.id.textViewForgotPassword)
+
         forgotPasswordText.setOnClickListener {
             val intent = Intent(this, ForgotPasswordActivity::class.java)
             startActivity(intent)
