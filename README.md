@@ -23,9 +23,8 @@ CatchyWords, kullanıcıların İngilizce kelimeleri kalıcı olarak öğrenmele
 * Kamile Ülkem Arslan  242802041 - *UI/UX Tasarım *
 * Tuncay Per 242802049 - *Backend*
 
-## 📋 Öğrenci Beyan Tablosu (Proje İsterleri)
+## 📋Beyan Tablosu
 
-| İsterler Gerçekleştirildi | Öğrenci Beyanı |
 | :--- | :--- |
 | Kullanıcı Kayıt Modülü hazırladığınız yazılımda var mı? | **Evet** |
 | Kelime ekleme modülü yazılımda var mı? | **Evet** |
