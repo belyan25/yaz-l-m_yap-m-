@@ -120,7 +120,7 @@ class WordleActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val fiveLetterWords = mutableListOf<String>()
 
-                // Tüm kelimeleri gezip sadece "5 harfli" VE "Öğrenmesi Tamamlanmış" (Seviye 6) olanları ayıklıyoruz
+                // Tüm kelimeleri gezip sadece "5 harfli" VE "Öğrenmesi Tamamlanmış" (Seviye 6) olanları ayıklıyor
                 for (child in snapshot.children) {
                     val word = child.getValue(Word::class.java)
                     if (word != null) {
@@ -142,7 +142,7 @@ class WordleActivity : AppCompatActivity() {
                     Toast.makeText(this@WordleActivity, "Havuzunuzda tam ezberlenmiş 5 harfli kelime yok! Varsayılan kelime seçildi.", Toast.LENGTH_LONG).show()
                 }
 
-                // Kelime çekildiğine göre butonu aktifleştir
+
                 btnCheck.isEnabled = true
                 btnCheck.text = "KONTROL ET"
             }

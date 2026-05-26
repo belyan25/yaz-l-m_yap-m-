@@ -1,6 +1,10 @@
 package com.example.kelimeezberlemesistemi
 
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -11,10 +15,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import android.content.Context
-import android.graphics.Color
-import android.os.Handler
-import android.os.Looper
 
 class QuizActivity : AppCompatActivity() {
 
@@ -114,10 +114,10 @@ class QuizActivity : AppCompatActivity() {
             return
         }
 
-        // YENİ SORUYA GEÇERKEN TÜM BUTON RENKLERİNİ ESKİSİ GİBİ SIFIRLIYORUZ
+        // YENİ SORUYA GEÇERKEN TÜM BUTON RENKLERİNİ SIFIRLIYORUZ (GÖRÜNÜR YAPIYORUZ)
         for (btn in buttonList) {
-            btn.setBackgroundColor(Color.parseColor("#FFFFFF"))
-            btn.setTextColor(Color.WHITE)
+            btn.setBackgroundColor(Color.parseColor("#E0E0E0")) // Açık gri arka plan
+            btn.setTextColor(Color.parseColor("#333333")) // Koyu gri/siyah yazı
             btn.isEnabled = true // Butonları tekrar tıklanabilir yapıyoruz
         }
 
@@ -159,7 +159,7 @@ class QuizActivity : AppCompatActivity() {
             clickedButton.setBackgroundColor(Color.parseColor("#E91E63"))
             clickedButton.setTextColor(Color.WHITE)
 
-            // Kullanıcı yanlış bildiğinde asıl doğru olan şık hangisiyse onu da yeşil yakıp gösterelim (Jüri bayılır buna)
+            // Kullanıcı yanlış bildiğinde asıl doğru olan şık hangisiyse onu da yeşil yakıp gösterelim
             for (btn in buttonList) {
                 if (btn.text.toString() == word.turkce) {
                     btn.setBackgroundColor(Color.parseColor("#8BC34A"))

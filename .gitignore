@@ -1,15 +1,10 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# Firebase ve Özel Yapılandırmalar
+app/google-services.json
 local.properties
+
+# Android Studio ve Build Dosyaları
+.idea/
+.gradle/
+build/
+app/build/
+*.iml

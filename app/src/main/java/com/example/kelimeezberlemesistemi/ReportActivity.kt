@@ -1,6 +1,7 @@
 package com.example.kelimeezberlemesistemi
 
-
+import android.content.Intent
+import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.os.Bundle
 import android.os.Environment
@@ -8,26 +9,67 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
+class ReportActivity : AppCompatActivity() {
 
-        // 2. Dinamik Veri Setleme Alanı
-        // TODO: Projenizdeki Room Veritabanını bağladığınızda verileri buradan çekmelisiniz.
-        // Örn: val totalCount = db.wordDao().getTotalWordsCount()
-        val totalWordsCount = 24
-        val learnedWordsCount = 8
+    // 1. Sınıf seviyesinde değişkenlerimizi tanımlıyoruz
+    private var totalWordCount = 0
+    private var learnedWordCount = 0
+    private var dailyWordCount = 0
 
-        // Verileri arayüze yazdırıyoruz
-        tvTotalWords.text = totalWordsCount.toString()
-        tvLearnedWords.text = learnedWordsCount.toString()
+    private lateinit var tvTotalWords: TextView
+    private lateinit var tvLearnedWords: TextView
+    private lateinit var tvDailyWordsCount: TextView
+    private lateinit var btnPrint: Button
+    private lateinit var btnReportBack: Button // Senin özel geri butonun
 
-        // 3. PDF Çıktısı Alma Buton Dinleyicisi (İster 5)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_report)
+
+        // Senin özel başlık tasarımın olduğu için Android'in varsayılan başlığını gizliyoruz
+        supportActionBar?.hide()
+
+        // 2. Arayüz elemanlarını bağlıyoruz
+        tvTotalWords = findViewById(R.id.tvTotalWords)
+        tvLearnedWords = findViewById(R.id.tvLearnedWords)
+        tvDailyWordsCount = findViewById(R.id.tvDailyWordsCount)
+        btnPrint = findViewById(R.id.btnPrintReport)
+        btnReportBack = findViewById(R.id.btnReportBack)
+
+        // --- ÖZEL GERİ BUTONU AKTİFLEŞTİRME ---
+        btnReportBack.setOnClickListener {
+            finish() // Sayfayı kapatır ve HomeActivity'ye geri döner
+        }
+
+        // 3. Verileri çekiyoruz
+        fetchReportData()
+
+        // 4. PDF Çıktısı Alma Butonu
         btnPrint.setOnClickListener {
-
+            if (totalWordCount == 0) {
+                Toast.makeText(this, "Raporlanacak kelime bulunamadı!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "PDF Hazırlanıyor...", Toast.LENGTH_SHORT).show()
+                generatePdfReport()
+            }
         }
     }
 
     private fun fetchReportData() {
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
         val databaseRef = FirebaseDatabase.getInstance("https://yazilimyapimi1-default-rtdb.europe-west1.firebasedatabase.app/")
             .getReference("Kelimeler")
             .child(currentUserId)
@@ -54,6 +96,7 @@ import androidx.appcompat.app.AppCompatActivity
                     }
                 }
 
+                // Ekrana sayıları yazdır
                 tvTotalWords.text = totalWordCount.toString()
                 tvLearnedWords.text = learnedWordCount.toString()
                 tvDailyWordsCount.text = "$dailyWordCount Kelime"
@@ -73,24 +116,29 @@ import androidx.appcompat.app.AppCompatActivity
         val canvas = page.canvas
         val paint = Paint()
 
+        // PDF Başlığı
         paint.textSize = 20f
         paint.isFakeBoldText = true
         canvas.drawText("KELİME ÖĞRENME RAPORU", 20f, 50f, paint)
 
+        // PDF Tarihi
         paint.textSize = 14f
         paint.isFakeBoldText = false
         canvas.drawText("Rapor Tarihi: ${SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date())}", 20f, 80f, paint)
 
+        // PDF Verileri
         canvas.drawText("Toplam Havuzdaki Kelime: $totalWordCount", 20f, 120f, paint)
         canvas.drawText("Tamamen Ezberlenen (Seviye 6): $learnedWordCount", 20f, 150f, paint)
         canvas.drawText("Bugün Çalışılan Kelime (Günlük): $dailyWordCount", 20f, 180f, paint)
 
+        // PDF Başarı Oranı
         val basariOrani = if (totalWordCount > 0) (learnedWordCount * 100) / totalWordCount else 0
         paint.isFakeBoldText = true
         canvas.drawText("Genel Başarı Oranı: %$basariOrani", 20f, 220f, paint)
 
         pdfDocument.finishPage(page)
 
+        // Dosyayı kaydetme
         val fileName = "Kelime_Raporu_${System.currentTimeMillis()}.pdf"
         val file = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName)
 
@@ -98,6 +146,7 @@ import androidx.appcompat.app.AppCompatActivity
             pdfDocument.writeTo(FileOutputStream(file))
             pdfDocument.close()
 
+            // PDF'i açmak için FileProvider köprüsü (Daha önce Manifest'e eklemiştik)
             val uri = FileProvider.getUriForFile(this, "com.example.kelimeezberlemesistemi.provider", file)
 
             val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -110,10 +159,5 @@ import androidx.appcompat.app.AppCompatActivity
         } catch (e: Exception) {
             Toast.makeText(this, "Cihazda PDF okuyucu bulunamadı! Dosya kaydedildi.", Toast.LENGTH_LONG).show()
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
-        return true
     }
 }

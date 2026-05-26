@@ -27,7 +27,7 @@
             android:textColor="#2D3436"
             android:layout_marginBottom="20dp"/>
 
-        <!-- Kelime ve Ses İkonu -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

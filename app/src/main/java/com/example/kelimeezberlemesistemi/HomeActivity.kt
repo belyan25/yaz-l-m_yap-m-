@@ -75,8 +75,7 @@ class HomeActivity : AppCompatActivity() {
                 val etSamples = view.findViewById<TextInputEditText>(R.id.etSamples)
                 val btnSave = view.findViewById<Button>(R.id.btnSaveWord)
 
-
-                val btnVoice = view.findViewById<ImageView>(R.id.btnSpeak) //
+                val btnVoice = view.findViewById<ImageView>(R.id.btnSpeak)
 
                 btnVoice?.setOnClickListener {
                     // İngilizce kutusunu aktif ses kutusu yapıyoruz
@@ -146,23 +145,23 @@ class HomeActivity : AppCompatActivity() {
 
         // --- 3. DİĞER SAYFALARA GEÇİŞ BUTONLARI ---
         findViewById<MaterialCardView>(R.id.btnStartQuiz).setOnClickListener {
-            startActivity(Intent(this, QuizActivity::class.java))
+            startActivity(Intent(this@HomeActivity, QuizActivity::class.java))
         }
 
         findViewById<MaterialCardView>(R.id.btnShowReport).setOnClickListener {
-            startActivity(Intent(this, ReportActivity::class.java))
+            startActivity(Intent(this@HomeActivity, ReportActivity::class.java))
         }
 
         findViewById<MaterialCardView>(R.id.btnStartWordle).setOnClickListener {
-            startActivity(Intent(this, WordleActivity::class.java))
+            startActivity(Intent(this@HomeActivity, WordleActivity::class.java))
         }
 
         findViewById<MaterialCardView>(R.id.btnGoStory).setOnClickListener {
-            startActivity(Intent(this, StoryActivity::class.java))
+            startActivity(Intent(this@HomeActivity, StoryActivity::class.java))
         }
 
         findViewById<MaterialCardView>(R.id.btnSettings).setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+            startActivity(Intent(this@HomeActivity, SettingsActivity::class.java))
         }
 
         // --- 4. FIREBASE'DEN CANLI VERİ, GÜNLÜK HEDEF VE KAYDIRARAK SİLME ---
