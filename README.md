@@ -23,8 +23,9 @@ CatchyWords, kullanıcıların İngilizce kelimeleri kalıcı olarak öğrenmele
 * Kamile Ülkem Arslan  242802041 - *UI/UX Tasarım *
 * Tuncay Per 242802049 - *Backend*
 
-## 📋Beyan Tablosu
+## 📋  Beyan Tablosu (
 
+| |  |
 | :--- | :--- |
 | Kullanıcı Kayıt Modülü hazırladığınız yazılımda var mı? | **Evet** |
 | Kelime ekleme modülü yazılımda var mı? | **Evet** |
