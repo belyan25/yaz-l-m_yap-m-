@@ -25,7 +25,7 @@ CatchyWords, kullanıcıların İngilizce kelimeleri kalıcı olarak öğrenmele
 
 ## 📋  Beyan Tablosu (
 
-| |  |
+| İsterler       |    Beyan   |
 | :--- | :--- |
 | Kullanıcı Kayıt Modülü hazırladığınız yazılımda var mı? | **Evet** |
 | Kelime ekleme modülü yazılımda var mı? | **Evet** |
